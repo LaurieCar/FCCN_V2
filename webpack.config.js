@@ -29,6 +29,9 @@ Encore
     // but, you probably want this, unless you're building a single-page app
     .enableSingleRuntimeChunk()
 
+    // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
+    .enableStimulusBridge('./assets/controllers.json')
+
     /*
      * FEATURE CONFIG
      *
@@ -66,7 +69,7 @@ Encore
     //.enableTypeScriptLoader()
 
     // uncomment if you use React
-    //.enableReactPreset()
+    .enableReactPreset()
 
     // uncomment to get integrity="..." attributes on your script & link tags
     // requires WebpackEncoreBundle 1.4 or higher
@@ -74,6 +77,10 @@ Encore
 
     // uncomment if you're having problems with a jQuery plugin
     //.autoProvidejQuery()
+
+    .addAliases({
+        '@symfony/stimulus-bridge/controllers.json': require.resolve('./assets/controllers.json')
+    })
 ;
 
 module.exports = Encore.getWebpackConfig();
