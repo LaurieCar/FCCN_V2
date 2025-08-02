@@ -14,6 +14,15 @@
         {% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
+        
+        <div class="flex flex-row h-full min-h-screen">
+        {{ include('layout/navbar.html.twig') }}
+        <div class="w-full">
+                {% block content %}{% endblock %}
+        </div>
+        {{ include('layout/footer.html.twig') }}
+        </div>
+        
+        {# {% block body %}{% endblock %} #}
     </body>
 </html>
