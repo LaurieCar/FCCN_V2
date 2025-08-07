@@ -3,7 +3,9 @@ module.exports = {
   content: [
     "./assets/**/*.js",
     "./templates/**/*.html.twig",
-    "./assets/**/*.jsx"
+    "./assets/**/*.jsx",
+    "./assets/react/controllers/*.jsx",
+    "./assets/react/components/*.jsx",
   ],
   theme: {
     extend: {

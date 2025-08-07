@@ -13,16 +13,14 @@
             {# {% block importmap %}{{ importmap('app') }}{% endblock %} #}
         {% endblock %}
     </head>
-    <body>
+    <body class="flex flex-col min-h-screen">
         
-        <div class="flex flex-row h-full min-h-screen">
-        {{ include('layout/navbar.html.twig') }}
-        <div class="w-full">
-                {% block content %}{% endblock %}
-        </div>
-        {{ include('layout/footer.html.twig') }}
-        </div>
         
-        {# {% block body %}{% endblock %} #}
+            {{ include('layout/navbar.html.twig') }}
+            <main class="flex-1">
+                    {% block content %}{% endblock %}
+            </main>
+            {{ include('layout/footer.html.twig') }}
+        
     </body>
 </html>
