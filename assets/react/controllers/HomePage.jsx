@@ -1,10 +1,15 @@
 import React from "react";
 import News from "../components/News";
+import Slider from "../components/Slider";
 
 const HomePage = () => {
 
     return (
-        <section><News/></section>
+        <>
+            <section><Slider/></section>
+            <section><News/></section>
+        </>
+        
     )
 }
 
