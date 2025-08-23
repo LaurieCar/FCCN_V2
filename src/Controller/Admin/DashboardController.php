@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\CarouselImage;
+use App\Entity\Admin;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -20,7 +21,7 @@ class DashboardController extends AbstractDashboardController
     public function index(): Response
     {
         $url = $this->adminUrlGenerator
-        ->setController(NewsCrudController::class)
+        ->setController(AdminCrudController::class)
         ->generateUrl();
 
         return $this->redirect($url);
@@ -56,6 +57,7 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToUrl('Retour au site', 'fa fa-home', '/home');
+        yield MenuItem::linkToCrud('Administrateurs', 'fa fa-user-shield', Admin::class);
         yield MenuItem::linkToCrud('News', 'fas fa-list', News::class);
         yield MenuItem::linkToCrud('Categories', 'fas fa-list', Category::class);
         yield MenuItem::linkToCrud('Caroussel', 'fas fa-list', CarouselImage::class);

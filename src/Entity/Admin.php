@@ -6,6 +6,7 @@ use App\Repository\AdminRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: AdminRepository::class)]
 class Admin implements UserInterface, PasswordAuthenticatedUserInterface
@@ -29,6 +30,12 @@ class Admin implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 50)]
     private ?string $lastname = null;
+
+    /**
+     * Champ utilisé uniquement pour les formulaires
+     */
+    #[Assert\Length(min: 8, minMessage: "Le mot de passe doit faire au moins 8 caractères")]
+    private ?string $plainPassword = null;
 
     public function getId(): ?int
     {
@@ -122,6 +129,18 @@ class Admin implements UserInterface, PasswordAuthenticatedUserInterface
         $this->lastname = $lastname;
 
         return $this;
+    }
+
+    public function getPlainPassword(): ?string 
+    { 
+        return $this->plainPassword; 
+    }
+
+    public function setPlainPassword(?string $plainPassword): static 
+    { 
+        $this->plainPassword = $plainPassword; 
+        
+        return $this; 
     }
 
 }
