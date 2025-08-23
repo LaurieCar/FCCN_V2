@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Category;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
@@ -22,5 +23,13 @@ class CategoryCrudController extends AbstractCrudController
             TextField::new('name')
                 ->setLabel('Nom'),
         ];
+    }
+
+    public function configureCrud(Crud $crud): Crud
+    {
+        return $crud ->setFormOptions([
+            'csrf_protection' => true,
+            'csrf_token_id'   => 'category_item',
+        ]);
     }
 }

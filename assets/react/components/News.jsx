@@ -20,7 +20,7 @@ const News = () => {
 
     console.log(news);
     return (
-        <section className='flex flex-col ml-10 px-4 pt-32'>
+        <section className='flex flex-col ml-10 px-40 pt-32'>
             <h2 className='text-redFccn font-quicksand font-bold text-2xl'>NOS ACTUALITÉS</h2>
             <p className='font-tahoma my-6 text-gray-600'>Retrouvez-ici les dernières actualités du Football Club Canal Nord !</p>
 

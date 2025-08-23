@@ -1,19 +1,40 @@
 import React, { useEffect, useRef, useState } from "react";
 import '../../styles/slider.css';
 
-const Slider = ({images = []}) => {
+const Slider = () => {
 
     const [currentSlide, setCurrentSlide] = useState(0);
     const [isAnimationPaused, setIsAnimationPaused] = useState(false);
     const sliderRef = useRef(null);
     const timeoutRef = useRef(null);
+    const [images, setImages] = useState([]); 
+
+    // Appel API Carousel Image
+    useEffect(() => {
+    fetch("/carousel") // ← ou "/carousel"
+      .then((res) => {
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        return res.json();
+      })
+      .then((data) => {
+        const sorted = Array.isArray(data)
+          ? [...data].sort((a, b) => (a.orderImage ?? 0) - (b.orderImage ?? 0))
+          : [];
+        setImages(sorted); // ← on alimente le state
+      })
+      .catch((err) => {
+        console.error("Erreur API carousel:", err);
+        setImages([]);
+      });
+  }, []);
 
     // Durée totale de l'animation 16s et par slide 4s
     const totalAnimationTime = 16000;
-    const slideInterval = totalAnimationTime / images.length;
+    const slideInterval = images.length ? (totalAnimationTime / images.length) : 0;
 
     useEffect(() => {
         // démarrer l'animation automatique
+        if (!images.length || !slideInterval) return;
         startAutoSlide();
 
         // Nettoyer le timeout lors du démontage
@@ -22,9 +43,11 @@ const Slider = ({images = []}) => {
                 clearTimeout(timeoutRef.current);
             }
         };
-    }, [images.length]);
+    }, [images.length, slideInterval]);
 
     const startAutoSlide = () => {
+        if (!images.length || !slideInterval) return;
+
         if(timeoutRef.current) {
             clearTimeout(timeoutRef.current);
         }
@@ -37,7 +60,7 @@ const Slider = ({images = []}) => {
         timeoutRef.current = setTimeout(slideToNext, slideInterval);
     };
 
-    const handledotCLick = (index) => {
+    const handleDotCLick = (index) => {
         setCurrentSlide(index);
         setIsAnimationPaused(true);
 
@@ -81,7 +104,7 @@ const Slider = ({images = []}) => {
                     <div
                         key={index}
                         className={`dot ${currentSlide === index && isAnimationPaused ? 'active' : ''}`}
-                        onClick={() => handleDotClick(index)}
+                        onClick={() => handleDotCLick(index)}
                         style={{
                             animation: isAnimationPaused ? 'none' : undefined,
                             background: (currentSlide === index && isAnimationPaused) ? '#333333' : undefined

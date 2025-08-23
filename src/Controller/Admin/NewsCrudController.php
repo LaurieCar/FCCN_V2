@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\News;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
@@ -17,7 +18,6 @@ class NewsCrudController extends AbstractCrudController
     {
         return News::class;
     }
-
 
     public function configureFields(string $pageName): iterable
     {
@@ -48,6 +48,14 @@ class NewsCrudController extends AbstractCrudController
                 ->setHelp('Collez l\'URL d\'une image')
                 ->hideOnIndex()    
         ];
+    }
+
+    public function configureCrud(Crud $crud): Crud
+    {
+        return $crud ->setFormOptions([
+            'csrf_protection' => true,
+            'csrf_token_id'   => 'news_item',
+        ]);
     }
     
 }

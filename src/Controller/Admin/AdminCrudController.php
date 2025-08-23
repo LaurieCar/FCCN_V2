@@ -28,7 +28,11 @@ class AdminCrudController extends AbstractCrudController
     {
         return $crud
             ->setEntityLabelInSingular('Administrateur')
-            ->setEntityLabelInPlural('Administrateurs');
+            ->setEntityLabelInPlural('Administrateurs')
+            ->setFormOptions([
+                'csrf_protection' => false,
+                'csrf_token_id'   => 'admin_item',
+            ]);
             //->setEntityPermission('ROLE_SUPER_ADMIN'); // Admin uniquement gérés pas le super admin
     }
     
