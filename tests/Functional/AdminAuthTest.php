@@ -11,7 +11,7 @@ class AdminAuthTest extends WebTestCase
     {
         $client = static::createClient();
         $client = $client->request('GET', '/admin');
-        self::assertResponseRedirects('/login');
+        $this->assertResponseRedirects('/login');
 
     }
 
@@ -21,7 +21,7 @@ class AdminAuthTest extends WebTestCase
         $client = static::createClient();
         // Ouvre la page login
         $crawler = $client->request('GET', '/login');
-        self::assertResponseIsSuccessful();
+        $this->assertResponseIsSuccessful();
 
         // Soumission du formulaire
         $form = $crawler->selectButton('Se connecter')->form([
@@ -31,7 +31,7 @@ class AdminAuthTest extends WebTestCase
         $client->submit($form);
 
         // Redirection vers /admin
-        self::assertResponseRedirects('/admin');
+        $this->assertResponseRedirects('/admin');
         $client->followRedirect();
     }
 
@@ -40,7 +40,7 @@ class AdminAuthTest extends WebTestCase
     {
         $client = static::createClient();
         $crawler = $client->request('GET', '/login');
-        self::assertResponseIsSuccessful();
+        $this->assertResponseIsSuccessful();
 
         $form = $crawler->selectButton('Se connecter')->form([
             'email' => 'admin1@fccn.com',
@@ -49,10 +49,10 @@ class AdminAuthTest extends WebTestCase
         $client->submit($form);
 
         // redirection vers login
-        self::assertResponseRedirects('/login');
+        $this->assertResponseRedirects('/login');
         $client->followRedirect();
 
-        self::assertSelectorExists('[data-test="login-error"]');
+        $this->assertSelectorExists('[data-test="login-error"]');
     }
 
     // test connexion email inconnu
@@ -60,7 +60,7 @@ class AdminAuthTest extends WebTestCase
     {
         $client = static::createClient();
         $crawler = $client->request('GET', '/login');
-        self::assertResponseIsSuccessful();
+        $this->assertResponseIsSuccessful();
 
         $form = $crawler->selectButton('Se connecter')->form([
             'email' => 'test@test.com', // unknown email
@@ -69,11 +69,11 @@ class AdminAuthTest extends WebTestCase
         $client->submit($form);
 
         // redirection vers /login
-        self::assertResponseRedirects('/login');
+        $this->assertResponseRedirects('/login');
         $client->followRedirect();
 
         // message d'erreur
-        self::assertSelectorExists('[data-test="login-error"]');
+        $this->assertSelectorExists('[data-test="login-error"]');
     }
 
 }
