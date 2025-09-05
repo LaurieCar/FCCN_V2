@@ -18,15 +18,23 @@ class News
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\NotBlank(message: "Le titre est obligatoire.")]
+    #[Assert\Length(
+    max: 100,
+    maxMessage: "Le titre ne doit pas dépasser {{ limit }} caractères.")]
     #[ORM\Column(length: 100)]
     private ?string $title = null;
 
+    #[Assert\NotBlank(message: "Le contenu est obligatoire.")]
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 
+    #[Assert\Url(message: "L'URL de l'image n'est pas valide.")]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
+    #[Assert\NotBlank(message: "Le slug est obligatoire.")]
+    #[Assert\Length(max: 255)]
     #[ORM\Column(length: 255, unique:true)]
     private ?string $slug = null;
 

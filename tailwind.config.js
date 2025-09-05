@@ -4,7 +4,7 @@ module.exports = {
     "./assets/**/*.js",
     "./templates/**/*.html.twig",
     "./assets/**/*.jsx",
-    "./assets/react/controllers/*.jsx",
+    "./assets/react/containers/*.jsx",
     "./assets/react/components/*.jsx",
   ],
   theme: {

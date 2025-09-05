@@ -19,7 +19,7 @@ final class NewsController extends AbstractController
         try {
             $news = $this->newsService->getPublishedNews();
 
-            // format pour l'api 
+            // Mise en forme des données
             $data = [];
             foreach ($news as $new) {
                 $data[] = [
