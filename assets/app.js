@@ -14,6 +14,6 @@ import 'flowbite';
 
 // assets/app.js
 import { registerReactControllerComponents } from '@symfony/ux-react';
-registerReactControllerComponents(require.context('./react/controllers', true, /\.(j|t)sx?$/));
+registerReactControllerComponents(require.context('./react/containers', true, /\.(j|t)sx?$/));
 
 
