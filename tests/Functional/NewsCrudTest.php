@@ -56,9 +56,6 @@ class NewsCrudTest extends WebTestCase
         $this->assertResponseRedirects(); // vérifie la redirection
         $crawler = $client->followRedirect(); // suit la redirection vers la page index
 
-        // 1ere verif ; la news apparait dans l'admin
-        //$this->assertStringContainsString($title, $crawler->filter('body')->text());
-
         // Verif: la news est bien créée en BDD
         $entityManager->clear();
         $createdNews = $entityManager->getRepository(News::class)->findOneBy(['title' => $title]);

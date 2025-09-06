@@ -1,4 +1,4 @@
-describe('Connexio admin - back-office', () => {
+describe('Connexion admin - back-office', () => {
 
     it('doit se connecter avec succès', () => {
         cy.visit('https://127.0.0.1:8000/login');

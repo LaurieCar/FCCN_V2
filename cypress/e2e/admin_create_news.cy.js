@@ -7,7 +7,7 @@ describe("Admin - Création d'une actualité ", () => {
 
     // avant la création de la nouvelle actu, l'admin doit être connecté
     beforeEach(() => {
-        cy.loginAsAdmin() ; // récupération de la commande custom de connexion
+        cy.loginAsAdmin(); 
     });
 
     it('doit créer une nouvelle actualité', () => {
