@@ -1,6 +1,6 @@
 describe('Accueil FCCN - Affichage des actualités', () => {
   it('doit afficher la section Actualités du club', () => {
-    cy.visit('https://127.0.0.1:8000/home');
+    cy.visit('https://127.0.0.1:8000');
 
     // test titre de la section
     cy.contains('NOS ACTUALITÉS').should('be.visible');

@@ -24,7 +24,7 @@ security:
                 default_target_path: /admin
             logout:
                 path: /logout
-                target: /home
+                target: /
             # custom_authenticator: App\Security\AdminAuthenticator
 
             # remember_me:
