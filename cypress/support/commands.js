@@ -27,8 +27,8 @@
 Cypress.Commands.add('loginAsAdmin', () => {
   cy.visit('/login')
 
-  cy.get('input[name="email"]').type(Cypress.env('ADMIN_EMAIL'))
-  cy.get('input[name="password"]').type(Cypress.env('ADMIN_PASSWORD'), { log: false })
+  cy.get('input[name="email"]').type('admin1@fccn.com')
+  cy.get('input[name="password"]').type('Azerty77')
 
   cy.get('form').submit()
 
