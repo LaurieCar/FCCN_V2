@@ -25,7 +25,7 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
 Cypress.Commands.add('loginAsAdmin', () => {
-  cy.visit('https://127.0.0.1:8000/login')
+  cy.visit('/login')
 
   cy.get('input[name="email"]').type(Cypress.env('ADMIN_EMAIL'))
   cy.get('input[name="password"]').type(Cypress.env('ADMIN_PASSWORD'), { log: false })

@@ -1,7 +1,7 @@
 describe('Connexion admin - back-office', () => {
 
     it('doit se connecter avec succès', () => {
-        cy.visit('https://127.0.0.1:8000/login');
+        cy.visit('/login');
 
         // récupère les identifiants de connexion 
         cy.get('input[name="email"]').type(Cypress.env('ADMIN_EMAIL'));
