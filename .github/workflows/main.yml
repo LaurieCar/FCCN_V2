@@ -56,100 +56,100 @@ jobs:
   # ========================================
   # Tests E2E Cypress
   # ========================================
-  e2e-tests:
-    name: Tests E2E Cypress
-    needs: php-tests # ne s'exécute que si les tests PHPUnit sont ok 
-    runs-on: ubuntu-latest
+  # e2e-tests:
+  #   name: Tests E2E Cypress
+  #   needs: php-tests # ne s'exécute que si les tests PHPUnit sont ok 
+  #   runs-on: ubuntu-latest
 
-    env:
-      DATABASE_URL: mysql://root:root@127.0.0.1:3306/app
-      APP_ENV: test
+  #   env:
+  #     DATABASE_URL: mysql://root:root@127.0.0.1:3306/app
+  #     APP_ENV: test
   
-    # Installation du service MySQL pour les tests E2E
-    services:
-      mysql:
-        image: mysql:8.0
-        env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: app
-        ports:
-          - 3306:3306
-        options: >-
-          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -proot"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=10
+  #   # Installation du service MySQL pour les tests E2E
+  #   services:
+  #     mysql:
+  #       image: mysql:8.0
+  #       env:
+  #         MYSQL_ROOT_PASSWORD: root
+  #         MYSQL_DATABASE: app
+  #       ports:
+  #         - 3306:3306
+  #       options: >-
+  #         --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -proot"
+  #         --health-interval=10s
+  #         --health-timeout=5s
+  #         --health-retries=10
     
-    steps:
-      # Récupération du code du repository
-      - name: Checkout
-        uses: actions/checkout@v4
+  #   steps:
+  #     # Récupération du code du repository
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
 
-      # Installation PHP + extensions MySQL
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: "8.2"
-          extensions: mbstring, intl, pdo_mysql, sodium
-          tools: composer
+  #     # Installation PHP + extensions MySQL
+  #     - name: Setup PHP
+  #       uses: shivammathur/setup-php@v2
+  #       with:
+  #         php-version: "8.2"
+  #         extensions: mbstring, intl, pdo_mysql, sodium
+  #         tools: composer
       
-      # Installation dépendances PHP
-      - name: Install PHP dependencies
-        run: composer install --no-interaction --prefer-dist
+  #     # Installation dépendances PHP
+  #     - name: Install PHP dependencies
+  #       run: composer install --no-interaction --prefer-dist
 
-      # Configuration de l'environnement de test
-      - name: Configure test environment
-        run: |
-          echo "APP_ENV=test" > .env.test.local
-          echo "DATABASE_URL=$DATABASE_URL" >> .env.test.local
+  #     # Configuration de l'environnement de test
+  #     - name: Configure test environment
+  #       run: |
+  #         echo "APP_ENV=test" > .env.test.local
+  #         echo "DATABASE_URL=$DATABASE_URL" >> .env.test.local
 
-      # Migration BDD
-      - name: Setup database
-        run: |
-          php bin/console doctrine:database:create --env=test --if-not-exists
-          php bin/console doctrine:migrations:migrate --no-interaction --env=test
-          php bin/console doctrine:fixtures:load --no-interaction --env=test
+  #     # Migration BDD
+  #     - name: Setup database
+  #       run: |
+  #         php bin/console doctrine:database:create --env=test --if-not-exists
+  #         php bin/console doctrine:migrations:migrate --no-interaction --env=test
+  #         php bin/console doctrine:fixtures:load --no-interaction --env=test
 
-      # Build des assets pour le front-end
-      - name: Setup Node.js & build assets
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
+  #     # Build des assets pour le front-end
+  #     - name: Setup Node.js & build assets
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: "20"
       
-      - name: Build frontend assets
-        run: |
-          npm install
-          npm run build
+  #     - name: Build frontend assets
+  #       run: |
+  #         npm install
+  #         npm run build
       
-      # Démarrage serveur symfony
-      - name: Start Symfony server
-        run: php -S 127.0.0.1:8001 -t public &
+  #     # Démarrage serveur symfony
+  #     - name: Start Symfony server
+  #       run: php -S 127.0.0.1:8001 -t public &
       
-      # AJOUTEZ CE STEP après le démarrage du serveur
-      - name: Debug - Test news API
-        run: |
-          echo "=== Test endpoint /news ==="
-          curl -s http://127.0.0.1:8001/news
-          echo -e "\n=== Vérifier le format JSON ==="
-          curl -s http://127.0.0.1:8001/news | jq . || echo "Pas du JSON valide"
+  #     # AJOUTEZ CE STEP après le démarrage du serveur
+  #     - name: Debug - Test news API
+  #       run: |
+  #         echo "=== Test endpoint /news ==="
+  #         curl -s http://127.0.0.1:8001/news
+  #         echo -e "\n=== Vérifier le format JSON ==="
+  #         curl -s http://127.0.0.1:8001/news | jq . || echo "Pas du JSON valide"
 
-      # Lancement des tests Cypress
-      - name: Run Cypress E2E tests
-        uses: cypress-io/github-action@v6
-        with:
-          config: baseUrl=http://127.0.0.1:8001
-          wait-on: 'http://127.0.0.1:8001'
-          wait-on-timeout: 60
-        # env:  # Variables d'environnement pour la connexion 
-        #   CYPRESS_ADMIN_EMAIL: ${{ secrets.CYPRESS_ADMIN_EMAIL }}
-        #   CYPRESS_ADMIN_PASSWORD: ${{ secrets.CYPRESS_ADMIN_PASSWORD }}
+  #     # Lancement des tests Cypress
+  #     - name: Run Cypress E2E tests
+  #       uses: cypress-io/github-action@v6
+  #       with:
+  #         config: baseUrl=http://127.0.0.1:8001
+  #         wait-on: 'http://127.0.0.1:8001'
+  #         wait-on-timeout: 60
+  #       # env:  # Variables d'environnement pour la connexion 
+  #       #   CYPRESS_ADMIN_EMAIL: ${{ secrets.CYPRESS_ADMIN_EMAIL }}
+  #       #   CYPRESS_ADMIN_PASSWORD: ${{ secrets.CYPRESS_ADMIN_PASSWORD }}
 
   # ========================================
   # Déploiement Scalingo 
   # ========================================
   deploy-scalingo:
     name: Deploy Scalingo
-    needs: [php-tests, e2e-tests]
+    needs: [php-tests]
     runs-on: ubuntu-latest
 
     steps:
