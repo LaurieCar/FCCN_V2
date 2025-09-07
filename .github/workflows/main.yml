@@ -109,10 +109,6 @@ jobs:
           php bin/console doctrine:database:create --env=test --if-not-exists
           php bin/console doctrine:migrations:migrate --no-interaction --env=test
           php bin/console doctrine:fixtures:load --no-interaction --env=test
-      
-      # AJOUTEZ ICI
-      - name: Debug - Check news count
-        run: php bin/console doctrine:query:sql "SELECT COUNT(*) as total FROM news"
 
       # Build des assets pour le front-end
       - name: Setup Node.js & build assets
@@ -128,6 +124,14 @@ jobs:
       # Démarrage serveur symfony
       - name: Start Symfony server
         run: php -S 127.0.0.1:8001 -t public &
+      
+      # AJOUTEZ CE STEP après le démarrage du serveur
+      - name: Debug - Test news API
+        run: |
+          echo "=== Test endpoint /news ==="
+          curl -s http://127.0.0.1:8001/news
+          echo -e "\n=== Vérifier le format JSON ==="
+          curl -s http://127.0.0.1:8001/news | jq . || echo "Pas du JSON valide"
 
       # Lancement des tests Cypress
       - name: Run Cypress E2E tests
