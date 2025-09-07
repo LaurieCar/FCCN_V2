@@ -131,6 +131,9 @@ jobs:
           config: baseUrl=http://127.0.0.1:8001
           wait-on: 'http://127.0.0.1:8001'
           wait-on-timeout: 60
+        env:  # Variables d'environnement pour la connexion 
+          CYPRESS_ADMIN_EMAIL: ${{ secrets.CYPRESS_ADMIN_EMAIL }}
+          CYPRESS_ADMIN_PASSWORD: ${{ secrets.CYPRESS_ADMIN_PASSWORD }}
 
   # ========================================
   # Déploiement Scalingo 
