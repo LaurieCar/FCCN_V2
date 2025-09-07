@@ -125,16 +125,6 @@ jobs:
       - name: Start Symfony server
         run: php -S 127.0.0.1:8001 -t public &
 
-      # AJOUTEZ CE STEP ICI (après le démarrage du serveur)
-      - name: Debug - Test server response
-        run: |
-          echo "=== Attendre que le serveur démarre ==="
-          sleep 5
-          echo "=== Tester le serveur ==="
-          curl -s -o /dev/null -w "Status: %{http_code}\n" http://127.0.0.1:8001/login
-          echo "=== Contenu de la page login ==="
-          curl -s http://127.0.0.1:8001/login | head -20
-
       # Lancement des tests Cypress
       - name: Run Cypress E2E tests
         uses: cypress-io/github-action@v6
