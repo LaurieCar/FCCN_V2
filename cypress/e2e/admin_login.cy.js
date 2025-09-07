@@ -4,8 +4,8 @@ describe('Connexion admin - back-office', () => {
         cy.visit('http://127.0.0.1:8001/login');
 
         // récupère les identifiants de connexion 
-        cy.get('input[name="email"]').type(Cypress.env('ADMIN_EMAIL'));
-        cy.get('input[name="password"]').type(Cypress.env('ADMIN_PASSWORD'), {log:false});
+        cy.get('input[name="email"]').type('admin1@fccn.com');
+        cy.get('input[name="password"]').type('Azerty77'), {log:false};
 
         cy.get('form').submit();
 
