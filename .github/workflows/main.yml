@@ -41,12 +41,13 @@ jobs:
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist
 
-      # Préparation d'une base de test SQLite
+      # Préparation d'une base de test SQLite + chargement des fixtures pour les tests
       - name: Setup test database (SQLite)
         run: |
           echo "DATABASE_URL=sqlite:///%kernel.project_dir%/var/test.db" > .env.test.local
           echo "APP_ENV=test" >> .env.test.local
           php bin/console doctrine:schema:create --env=test
+          php bin/console doctrine:fixtures:load --no-interaction --env=test
 
       # Lance PHPUnit
       - name: Run PHPUnit tests
