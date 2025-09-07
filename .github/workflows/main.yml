@@ -1,0 +1,163 @@
+name: CI/CD FCCN - Tests + Deploy
+
+on:
+  push:
+    branches: [ main ]   # uniquement sur la branche main
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # ========================================
+  # Tests fonctionnels PHPUnit
+  # ========================================
+  php-tests:
+    name: Tests PHPUnit
+    runs-on: ubuntu-latest
+
+    steps:
+      # Récupération du code du repository
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      # Installation PHP
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          extensions: mbstring, intl, pdo_sqlite
+          tools: composer
+
+      # Récupération des dépendances dans le cache
+      - name: Cache Composer
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.composer/cache
+            vendor
+          key: composer-${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: composer-${{ runner.os }}-
+
+      # Installation des dépendances PHP
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      # Préparation d'une base de test SQLite
+      - name: Setup test database (SQLite)
+        run: |
+          echo "DATABASE_URL=sqlite:///%kernel.project_dir%/var/test.db" > .env.test.local
+          echo "APP_ENV=test" >> .env.test.local
+          php bin/console doctrine:database:create --env=test --if-not-exists
+          php bin/console doctrine:schema:create --env=test
+
+      # Lance PHPUnit
+      - name: Run PHPUnit tests
+        run: ./vendor/bin/phpunit --testdox
+  
+  # ========================================
+  # Tests E2E Cypress
+  # ========================================
+  e2e-tests:
+    name: Tests E2E Cypress
+    needs: php-tests # ne s'exécute que si les tests PHPUnit sont ok 
+    runs-on: ubuntu-latest
+  
+    # Installation du service MySQL pour les tests E2E
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: app
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -proot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+    
+    steps:
+      # Récupération du code du repository
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Installation PHP + extensions MySQL
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          extensions: mbstring, intl, pdo_mysql, sodium
+          tools: composer
+      
+      # Installation dépendances PHP
+      - name: Install PHP dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      # Configuration de l'environnement de test
+      - name: Configure test environment
+        run: |
+          echo "APP_ENV=test" > .env.test.local
+          echo "DATABASE_URL=mysql://root:root@127.0.0.1:3306/app" >> .env.test.local
+
+      # Migration BDD
+      - name: Setup database
+        run: |
+          php bin/console doctrine:database:create --if-not-exists
+          php bin/console doctrine:migrations:migrate --no-interaction 
+
+      # Build des assets pour le front-end
+      - name: Setup Node.js & build assets
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      
+      - name: Build frontend assets
+        run: |
+          npm install
+          npm run build
+      
+      # Démarrage serveur symfony
+      - name: Start Symfony server
+        run: php -S 127.0.0.1:8001 -t public &
+
+      # Lancement des tests Cypress
+      - name: Run Cypress E2E tests
+        uses: cypress-io/github-action@v6
+        with:
+          config: baseUrl=http://127.0.0.1:8001
+          wait-on: 'http://127.0.0.1:8001'
+          wait-on-timeout: 60
+
+  # ========================================
+  # Déploiement Scalingo 
+  # ========================================
+  deploy-scalingo:
+    name: Deploy Scalingo
+    needs: [php-tests, e2e-tests]
+    runs-on: ubuntu-latest
+
+    steps:
+      # Récupération du code 
+      - name: Checkout
+        uses: actions/checkout@v4
+        # with:
+        #   fetch-depth: 0
+
+      # Déploiement scalingo
+      - name: Install Scalingo CLI
+        run: |
+          curl -O https://cli-dl.scalingo.com/install && bash install
+
+      - name: Deploy to Scalingo
+        env:
+          SCALINGO_API_TOKEN: ${{ secrets.SCALINGO_API_TOKEN }}
+        run: |
+          scalingo --app fccn-lc --region osc-fr1 deploy
+      
+      - name: Run post-deploy commands
+        env:
+          SCALINGO_API_TOKEN: ${{ secrets.SCALINGO_API_TOKEN }}
+        run: |
+          # Migrations
+          scalingo --app fccn-lc run "php bin/console doctrine:migrations:migrate --no-interaction
+
