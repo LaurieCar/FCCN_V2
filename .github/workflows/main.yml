@@ -110,6 +110,19 @@ jobs:
           php bin/console doctrine:migrations:migrate --no-interaction --env=test
           php bin/console doctrine:fixtures:load --no-interaction --env=test
 
+      # AJOUTEZ CE STEP ICI
+      - name: Debug - Test server and admin
+        run: |
+          echo "=== Vérifier l'admin en BDD ==="
+          php bin/console doctrine:query:sql "SELECT email, firstname FROM admin WHERE email = 'admin1@fccn.com'"
+          
+          echo "=== Tester le serveur ==="
+          sleep 2
+          curl -s -o /dev/null -w "Status: %{http_code}\n" http://127.0.0.1:8001/login
+          
+          echo "=== Contenu de la page login ==="
+          curl -s http://127.0.0.1:8001/login | grep -E "(form|input|login)" || echo "Pas de formulaire trouvé"
+
       # Build des assets pour le front-end
       - name: Setup Node.js & build assets
         uses: actions/setup-node@v4
