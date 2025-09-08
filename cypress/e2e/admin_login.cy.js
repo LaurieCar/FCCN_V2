@@ -9,11 +9,13 @@ describe('Connexion admin - back-office', () => {
 
         cy.get('form').submit();
 
-        /* cy.url().should('include', '/admin');
+        cy.wait(4000);
+
+        cy.url().should('include', '/admin');
         cy.get('span.logo-custom')
             .should('exist')
             .and('be.visible')
-            .and('contain.text', 'FCCN V2'); */
+            .and('contain.text', 'FCCN V2');
     })
 
 })
