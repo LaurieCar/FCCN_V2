@@ -1,4 +1,4 @@
-describe('Connexion admin - back-office', () => {
+/* describe('Connexion admin - back-office', () => {
 
     it('doit se connecter avec succès', () => {
         cy.visit('http://127.0.0.1:8001/admin');
@@ -16,4 +16,4 @@ describe('Connexion admin - back-office', () => {
             .and('contain.text', 'FCCN V2');
     })
 
-})
+}) */

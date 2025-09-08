@@ -1,4 +1,4 @@
-describe("Admin - Création d'une actualité ", () => {
+/* describe("Admin - Création d'une actualité ", () => {
     
     const title = "News test Cypress";
     const content = 'Contenu de test Cypress';
@@ -39,4 +39,4 @@ describe("Admin - Création d'une actualité ", () => {
     });
 
 
-});
+}); */

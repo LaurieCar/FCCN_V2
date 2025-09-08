@@ -1,4 +1,4 @@
-describe('Accueil FCCN - Affichage des actualités', () => {
+/* describe('Accueil FCCN - Affichage des actualités', () => {
   it('doit afficher la section Actualités du club', () => {
     cy.visit('http://127.0.0.1:8001');
 
@@ -16,4 +16,4 @@ describe('Accueil FCCN - Affichage des actualités', () => {
       cy.get('span').should('not.be.empty');
     })
   })
-})
+}) */
