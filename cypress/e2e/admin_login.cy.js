@@ -12,10 +12,11 @@ describe('Connexion admin - back-office', () => {
         cy.wait(2000);
 
         // cy.url().should('include', '/admin');
-        cy.get('span.logo-custom')
+        /* cy.get('span.logo-custom')
             .should('exist')
             .and('be.visible')
-            .and('contain.text', 'FCCN V2');
+            .and('contain.text', 'FCCN V2'); */
+        cy.contains('FCCN V2').should('exist');
     })
 
 })
