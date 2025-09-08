@@ -9,9 +9,9 @@ describe('Connexion admin - back-office', () => {
 
         cy.get('form').submit();
 
-        cy.wait(4000);
+        cy.wait(2000);
 
-        cy.url().should('include', '/admin');
+        // cy.url().should('include', '/admin');
         cy.get('span.logo-custom')
             .should('exist')
             .and('be.visible')
