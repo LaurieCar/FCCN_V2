@@ -1,7 +1,7 @@
 describe('Connexion admin - back-office', () => {
 
     it('doit se connecter avec succès', () => {
-        cy.visit('http://127.0.0.1:8001/login');
+        cy.visit('http://127.0.0.1:8001/admin');
 
         // récupère les identifiants de connexion 
         cy.get('input[name="email"]').type('admin1@fccn.com');
