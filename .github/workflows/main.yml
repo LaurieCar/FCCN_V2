@@ -52,40 +52,6 @@ jobs:
       # Lance PHPUnit
       - name: Run PHPUnit tests
         run: ./vendor/bin/phpunit --testdox || true
-      
-      # Build des assets pour le front-end
-      - name: Setup Node.js & build assets
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-      
-      - name: Build frontend assets
-        run: |
-          npm install
-          npm run build
-          php bin/console cache:clear
-      
-      # Démarrage serveur symfony
-      - name: Start Symfony server
-        run: php -S 127.0.0.1:8001 -t public &
-
-      # Lancement des tests Cypress
-      - name: Run Cypress E2E tests
-        uses: cypress-io/github-action@v6
-      - uses: actions/upload-artifact@v4
-        with:
-          name: cypress-screenshots
-          path: cypress/screenshots
-          if-no-files-found: ignore # 'warn' or 'error' are also available, defaults to `warn`
-      - uses: actions/upload-artifact@v4
-        with:
-          name: cypress-videos
-          path: cypress/videos
-          if-no-files-found: ignore # 'warn' or 'error' are also available, defaults to `warn`
-        # with:
-        #   config: baseUrl=http://127.0.0.1:8001
-        #   wait-on: 'http://127.0.0.1:8001'
-        #   wait-on-timeout: 60
   
   # ========================================
   # Tests E2E Cypress
@@ -158,14 +124,6 @@ jobs:
   #     # Démarrage serveur symfony
   #     - name: Start Symfony server
   #       run: php -S 127.0.0.1:8001 -t public &
-      
-  #     # AJOUTEZ CE STEP après le démarrage du serveur
-  #     - name: Debug - Test news API
-  #       run: |
-  #         echo "=== Test endpoint /news ==="
-  #         curl -s http://127.0.0.1:8001/news
-  #         echo -e "\n=== Vérifier le format JSON ==="
-  #         curl -s http://127.0.0.1:8001/news | jq . || echo "Pas du JSON valide"
 
   #     # Lancement des tests Cypress
   #     - name: Run Cypress E2E tests
