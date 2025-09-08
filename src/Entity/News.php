@@ -29,7 +29,7 @@ class News
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 
-    #[Assert\Url(message: "L'URL de l'image n'est pas valide.")]
+    #[Assert\Url(message: "L'URL de l'image n'est pas valide.", requireTld: true)]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
